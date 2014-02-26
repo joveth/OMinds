@@ -1,0 +1,82 @@
+<%- include header%>
+	<div class="content">
+		<% minds.forEach(function (mind, index) { %>
+		<div class="cell">
+  			<div class="cell_author" >
+  				<%if(mind.user){%>
+  				<img src="<%=mind.user.photo%>" title="<%=mind.user.nickname%>">
+  				<a href="/userinfor?uid=<%=mind.user._id%>"><%=mind.user.nickname%></a>
+  				<%}%>
+  				<span class="cell_loc" title="<%=(index+1)%>楼"><%=(index+1)%>#</span>
+  			</div>
+  			<div class="cell_text" title='<%=mind.cdate%>' >
+				<%=mind.content%> 				
+  			</div>
+  			<div class="cell_bar">
+  				<ul style="padding:0">
+  					<li><a id="putups<%= mind._id %>" name="putups" href="javascript:putUps('<%= mind._id %>');" title="<%=mind.ups%>个赞" >赞[<%=mind.ups%>]</a></li>
+  					<li><a id="putdowns<%= mind._id %>" name="putdowns" href="javascript:putDowns('<%= mind._id %>')" title="<%=mind.downs%>个踩">踩[<%=mind.downs%>]</a></li>
+  				</ul>
+  				<ul class="cell_bar_comm">
+  					<li><a href="/comment?oid=<%=mind._id%>" title="<%=mind.comments%>条评论" >评[<%=mind.comments%>]</a></li>
+  					<div class="bshare-custom" style="float:right;height:28px;margin-top: 4px;"><a title="分享到QQ空间" class="bshare-qzone"></a>
+  					<a title="分享到新浪微博" class="bshare-sinaminiblog"></a>
+  					<a title="分享到人人网" class="bshare-renren"></a>
+  					<a title="分享到腾讯微博" class="bshare-qqmb"></a>
+  					<a title="分享到网易微博" class="bshare-neteasemb"></a>
+  					<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/buttonLite.js#style=-1&amp;uuid=;pophcol=2&amp;lang=zh"></script>
+  					<script type="text/javascript" charset="utf-8" src="http://static.bshare.cn/b/bshareC0.js"></script>
+  					<script type="text/javascript" charset="utf-8">
+						bShare.addEntry({
+					        title:"OMinds分享",
+					        summary:'分享你的心事。' ,
+							vTag:'OMinds'});
+					</script>
+  				</ul>
+  			</div>
+  		</div>
+		<%})%>
+  	</div>
+  	<script type="text/javascript">
+  	function putUps(oid){
+			var params ={
+                oid:oid
+            };
+            $.ajax({
+                data: params,
+                url: '/addups',
+                type:'post',
+                jsonpCallback: 'callback',
+                success: function(data){
+                	console.log(data);
+                  $('#putups'+oid).attr("title",data+'个赞');
+                  $('#putups'+oid).html("赞["+data+"]");
+                  
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert('error ' + textStatus + " " + errorThrown);  
+                }
+            });
+		}
+		function putDowns(oid){
+			var params ={
+                oid:oid
+            };
+            $.ajax({
+                data: params,
+                url: '/addowns',
+                type:'post',
+                jsonpCallback: 'callback',
+                success: function(data){
+                  $('#putdowns'+oid).attr("title",data+'个踩');
+                  $('#putdowns'+oid).html("踩["+data+"]");
+                  
+                },
+                error: function(jqXHR, textStatus, errorThrown){
+                    alert('error ' + textStatus + " " + errorThrown);  
+                }
+            });
+		}
+	</script>
+  	
+<%- include footer%>

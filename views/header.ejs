@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  	<meta charset="utf-8">
+    <title><%= title %></title>
+    <!-- begin CSS -->
+    <link href="/stylesheets/style.css" type="text/css" rel="stylesheet">
+	<!-- end CSS -->
+	<script language="javascript" type="text/javascript" src="/js/jquery-1.7.1.min.js"></script>
+ 	<script language="javascript" type="text/javascript" src="/js/common.js"></script>
+  </head>
+  <body>
+    <div id="container" style="width: 700px; margin: 0 auto;">
+	<nav id="navigation">
+		<ul style="float:left;" id="headbar">
+			<li><a href="/" title="8小时内最新">最新</a></li>
+			<li><a href="#" title="24小时内评论最多">精华</a></li>
+			<li><a href="/upminds" title="无需登录快速投稿">投稿</a></li>
+			<li><a href="#">关于</a></li>
+			<li><a href="#">博客</a></li>
+			<li><a href="javascript:void(0);" id="searckBtn">搜索</a></li>
+		</ul>
+		<ul style="margin-left:50px;float:right;">
+			<%if(user) {%>
+			<a href="#" class="user_icon" style="clear:both;padding: 0;"><img src="<%=user.photo%>" title="<%=user.nickname%>"></a>
+			<%}else{%>
+			<li><a href="/login" >LOG</a></li>
+			<li><a href="/regist">REG</a></li>
+			<%}%>
+		</ul>
+	</nav>

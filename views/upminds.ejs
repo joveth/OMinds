@@ -1,0 +1,23 @@
+<%- include header%>
+	<div class="main">
+  		<div class="upideas_content clear_fix">
+  			<div class="up_content clear_fix">
+  				<div class="up_bar">
+  				<h3>投稿须知</h3>
+  				<ol style="padding:0;">
+  					<li>分享自己或朋友的Minds（心事），不浮夸、有意义，不含政治、色情、广告、诽谤、歧视等内容。</li>
+  					<li>分享的Minds（心事），将在审核之后发布。</li>
+  					<li>转载请注明出处，任何由Minds引发的法律等纠纷，本站概不负责。</li>
+  					<li>不得盗用站内其他会员的Minds。</li>
+  				</ol>
+  				</div>
+  				<div class="up_content_text">
+  					<form method="post" action="/putup" >
+  						<textarea id="mind_text" name="mind_text" class="up_idea_text" rows="23" required placeholder="分享你的Minds（心事）..." ><%if(ocontent!=null&&ocontent!=''){%><%=ocontent%><%}%></textarea>
+  						<span class="up_idea_err"><%= error %></span><button type="submit" class="up_idea_btn" id="idea_btn" >投递</button>
+  					</form>
+  				</div>
+  			</div>
+  		</div>
+  	</div>
+<%- include footer%>
