@@ -1,7 +1,7 @@
 //var mongodb = require('./db');
 var mongodb = require('mongodb').Db
 var ObjectID = require('mongodb').ObjectID;
-var settings = require('../settings');
+var settings = require('../db-set');
 
 function Mind(mind) {
 	this.content = mind.content;
