@@ -1,5 +1,7 @@
-var mongodb = require('./db');
+//var mongodb = require('./db');
+var mongodb = require('mongodb').Db
 var ObjectID = require('mongodb').ObjectID;
+var settings = require('../settings');
 
 function Mind(mind) {
 	this.content = mind.content;
@@ -26,7 +28,7 @@ Mind.prototype.save = function(callback) {
 		flag : this.flag
 	};
 	// 打开数据库
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);// 错误，返回 err 信息
 		}
@@ -51,7 +53,7 @@ Mind.prototype.save = function(callback) {
 };
 // 查詢 （查）
 Mind.getAll = function(callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -74,7 +76,7 @@ Mind.getAll = function(callback) {
 
 //update 更改（改）
 Mind.update = function(id,ups,downs,comments,callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);//错误，返回 err 信息
 		}
@@ -99,7 +101,7 @@ Mind.update = function(id,ups,downs,comments,callback) {
 };
 //delete 删除（删）
 Mind.removeById = function(id,callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -123,7 +125,7 @@ Mind.removeById = function(id,callback) {
 
 //通过id查找
 Mind.getById = function(id, callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}

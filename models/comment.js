@@ -1,5 +1,7 @@
-var mongodb = require('./db');
+//var mongodb = require('./db');
+var mongodb = require('mongodb').Db
 var ObjectID = require('mongodb').ObjectID;
+var settings = require('../settings');
 function Comment(comment) {
 	this.content = comment.content;
 	this.cdate = comment.cdate;
@@ -20,7 +22,7 @@ Comment.prototype.save = function(callback) {
 		oid : this.oid,
 		user :this.user
 	};
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -44,7 +46,7 @@ Comment.prototype.save = function(callback) {
 
 // 查(通过mind的id查找comments)
 Comment.get = function(oid,callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}

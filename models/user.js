@@ -1,5 +1,7 @@
-var mongodb = require('./db');
+//var mongodb = require('./db');
+var mongodb = require('mongodb').Db
 var ObjectID = require('mongodb').ObjectID;
+var settings = require('../settings');
 
 function User(user) {
 	this.email = user.email;
@@ -21,7 +23,7 @@ User.prototype.save = function(callback) {
 		photo : this.photo,
 		cdate : time
 	};
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -45,7 +47,7 @@ User.prototype.save = function(callback) {
 
 // R（查）
 User.get = function(email, callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -68,7 +70,7 @@ User.get = function(email, callback) {
 };
 // R（查，通过ID）
 User.getById = function(id, callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
@@ -91,7 +93,7 @@ User.getById = function(id, callback) {
 };
 // U (改)
 User.update = function(user, callback) {
-	mongodb.open(function(err, db) {
+	mongodb.connect(settings.url,function(err, db) {
 		if (err) {
 			return callback(err);
 		}
