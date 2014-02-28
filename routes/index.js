@@ -300,5 +300,9 @@ module.exports = function(app) {
 			
 		});
 	});
-	
+	 app.get('/about', function (req, res) {
+		res.render('about', {
+			title : 'OMinds - 关于',
+			user : req.session.user });
+	  });
 };

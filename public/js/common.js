@@ -2,7 +2,7 @@ $(document).ready(function(){
 	var flag = false;
 	$("#searckBtn").click(function(){
 		if(!flag){
-			$("#headbar").append("<li id=searchinput><from action=# ><input type=tex name=searchkey class=searck_input></form></li>");
+			$("#headbar").append("<li id=searchinput><from action=# ><input type=text name=searchkey class=searck_input></form></li>");
 		}else{
 			$("#searchinput").remove();
 		}
