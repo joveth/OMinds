@@ -283,7 +283,10 @@ a {
 .searck_input{
 	padding: 7px 9px;
 	border-radius: 0 100px 100px 0;
+<<<<<<< HEAD
 	width:140px;
+=======
+>>>>>>> a7a910ac03504fb30b9b734e647f44533c929032
 }
 input.searck_input:focus{
 	outline:none;

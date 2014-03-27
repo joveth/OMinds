@@ -122,7 +122,6 @@ Mind.removeById = function(id,callback) {
 		});
 	});
 };
-
 //通过id查找
 Mind.getById = function(id, callback) {
 	mongodb.connect(settings.url,function(err, db) {

@@ -156,7 +156,6 @@ module.exports = function(app) {
 						user : temp,
 						flag : flag
 					});
-				
 				mind.save(function(err, mind) {
 					if (err) {
 						req.flash('error', err);
@@ -185,6 +184,7 @@ module.exports = function(app) {
 				}
 				res.writeHead(200, { 'Content-Type': 'text/plain' });
 				res.end(temp.toString());
+				//res.json({success:1});
 				return;
 			});
 		});
@@ -489,7 +489,8 @@ module.exports = function(app) {
 		var updateUser = new User({
 			email : email,
 			nickname : nickname,
-			password : password
+			password : password,
+			photo:req.session.user.photo
 		});
 		User.update(updateUser, function(err) {
 			if (err) {

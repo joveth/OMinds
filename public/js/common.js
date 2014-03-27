@@ -3,6 +3,7 @@ $(document).ready(function(){
 	$("#searckBtn").click(function(){
 		if(!flag){
 			$("#headbar").append("<li id=searchinput><from id=searchForm method='get' action='/search' ><input type=text id=search_input name=searchkey class=searck_input onkeydown=doSubmit() ></form></li>");
+			$("#headbar").append("<li id=searchinput><from action=# ><input type=tex name=searchkey class=searck_input></form></li>");
 		}else{
 			$("#searchinput").remove();
 		}

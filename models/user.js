@@ -108,7 +108,7 @@ User.update = function(user, callback) {
 					nickname : user.nickname,
 					password : user.password
 				}
-			}, function(err) {
+			} ,function(err) {
 				db.close();
 				if (err) {
 					return callback(err);
