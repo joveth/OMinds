@@ -5,7 +5,7 @@
   			<div class="cell_author" >
   				<%if(mind.user){%>
   				<img src="<%=mind.user.photo%>" title="<%=mind.user.nickname%>">
-  				<a href="/userinfor?uid=<%=mind.user._id%>"><%=mind.user.nickname%></a>
+  				<a href="/theuserminds?uid=<%=mind.user._id%>"><%=mind.user.nickname%></a>
   				<%}%>
   				<span class="cell_loc" title="<%=(index+1)%>楼"><%=(index+1)%>#</span>
   			</div>

@@ -146,3 +146,71 @@ Mind.getById = function(id, callback) {
 		});
 	});
 };
+//检索
+Mind.searchByKey = function(users,skey,callback) {
+	  mongodb.connect(settings.url,function (err, db) {
+		    if (err) {
+		      return callback(err);
+		    }
+		    db.collection('minds', function(err, collection) {
+		      if (err) {
+		        db.close();
+		        return callback(err);
+		      }
+		      collection.find({flag:true,"$or" :[{user:{"$in":users}},{"content":skey}]}).sort({cdate: -1,comments:-1,ups:-1,downs:-1}).toArray(function(err,results){
+		    	  db.close();
+			        if (err) {
+			          return callback(err);
+			        }
+			        callback(null, results);
+		      });
+		    });
+	});
+};
+//精华
+Mind.getEssence = function(callback) {
+  mongodb.connect(settings.url,function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('minds', function(err, collection) {
+      if (err) {
+        db.close();
+        return callback(err);
+      }
+      //限制只取20条
+      collection.find({flag :true}).limit(20).skip(0).sort({comments:-1,ups:-1,cdate: -1,downs:-1}).toArray(function(err,results){
+    	  db.close();
+	        if (err) {
+	          return callback(err);
+	        }
+	        callback(null, results);
+      });
+    });
+  });
+};
+//用户投稿
+Mind.getUserMinds = function(user,callback) {
+  mongodb.connect(settings.url,function (err, db) {
+    if (err) {
+      return callback(err);
+    }
+    db.collection('minds', function(err, collection) {
+      if (err) {
+        db.close();
+        return callback(err);
+      }
+       var query = {};
+       if (user) {
+    	   query.user = user;
+       }
+      collection.find(query).sort({cdate: -1}).toArray(function(err,results){
+    	  db.close();
+	        if (err) {
+	          return callback(err);
+	        }
+	        callback(null, results);
+      });
+    });
+  });
+};

@@ -1,0 +1,19 @@
+<%- include header%>
+	<form action="/updateinfor" class="form-login" method="post" id="usersetting_form">
+		<div class="header">
+			OMinds-用户设置
+		</div>
+		<div class="inputs">
+			<span style="padding:10px 15px;color:red;" id="error"><%=error%></span>
+			<input id="reg_email" name="reg_email" type="text" value="<%= user.email%>" disabled >
+			<input id="reg_nickname" name="reg_nickname" type="text" required placeholder="昵称" value="<%= user.nickname%>">
+			<input id="reg_passw" name="reg_passw" type="password" required placeholder="密码" >
+			<input id="reg_repassw" name="reg_repassw" type="password" required  placeholder="密码确认">
+			<div class="clear">
+			</div>
+			<div class="button-login">
+				<input type="button" value="更 新" id="update_btn">
+			</div>
+		</div>
+	</form>
+<%- include footer%>

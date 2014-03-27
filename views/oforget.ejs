@@ -1,0 +1,19 @@
+<%- include header%>
+	<form action="/sendmail" class="form-login" method="post" id="forget_form">
+		<div class="header">
+			OMinds-发送邮件，找回密码
+		</div>
+		<div class="inputs">
+			<span style="padding:10px 15px;color:red;" id="error"><%=error%></span>
+			<input id="email" name="email" type="text" required placeholder="邮箱">
+			<div class="link-2">
+				<a 	href="/login">没忘记？</a>
+			</div>
+			<div class="clear">
+			</div>
+			<div class="button-login">
+				<input type="button" value="发 送" id="forget_btn">
+			</div>
+		</div>
+	</form>
+<%- include footer%>

@@ -4,7 +4,7 @@
   			<% if(mind.user){ %>
   			<div class="cell_author">
   				<img src="<%=mind.user.photo%>" title="<%=mind.user.nickname%>">
-  				<a href="/userinfor?uid=<%=mind.user._id%>"><%=mind.user.nickname%></a>
+  				<a href="/theuserminds?uid=<%=mind.user._id%>"><%=mind.user.nickname%></a>
   			</div>
   			<%}%>
   			<div class="cell_text" title='<%= mind.cdate.minute %>' >

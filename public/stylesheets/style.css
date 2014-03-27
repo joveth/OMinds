@@ -402,4 +402,40 @@ img.commphoto:hover{
 button.up_idea_btn:hover{
 	cursor:pointer;
 }
-
+.unav-main{
+    max-width: 690px;
+	margin: 20px auto;
+	height:30px;
+}
+.unav-main a{
+	display: block;
+	height: 34px;
+	opacity: 0.8;
+	width: 34px;
+	float:left;
+	margin: 0 20px 20px 0;
+}
+.nav-home {
+	background: url(../images/nav-home.png) no-repeat;
+}
+.nav-mind {
+	background: url(../images/nav-mind.png) no-repeat;
+}
+.nav-mail {
+	background: url(../images/nav-mail.png) no-repeat;
+}
+.nav-care {
+	background: url(../images/nav-plus.png) no-repeat;
+}
+.nav-user {
+	color:#fff;
+}
+.uc-main{
+    max-width: 690px;
+    border: solid 1px #111111;
+    -webkit-box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.2);
+	box-shadow: inset 0px 1px 0px 0px rgba(255,255,255,0.2);
+	background: url(../images/bgnoise_lg.png) repeat left top;
+	border-radius: 10px;
+	margin-bottom:20px;
+}

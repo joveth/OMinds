@@ -99,22 +99,44 @@ User.update = function(user, callback) {
 		}
 		db.collection('users', function(err, collection) {
 			if (err) {
-				mongodb.close();
+				db.close();
 				return callback(err);
 			}
 			collection.update({
 				"email" : user.email}, {
 				$set : {
 					nickname : user.nickname,
-					password : user.password,
-					photo : user.photo
+					password : user.password
 				}
 			}, function(err) {
-				mongodb.close();
+				db.close();
 				if (err) {
 					return callback(err);
 				}
 				callback(null);
+			});
+		});
+	});
+};
+//查找用户（检索）
+User.searchByKey = function(skey, callback) {
+	mongodb.connect(settings.url, function(err, db) {
+		if (err) {
+			return callback(err);
+		}
+		db.collection('users', function(err, collection) {
+			if (err) {
+				db.close();
+				return callback(err);
+			}
+			collection.find({
+				nickname : skey
+			}).toArray(function(err, results) {
+				db.close();
+				if (err) {
+					return callback(err);
+				}
+				callback(null, results);
 			});
 		});
 	});

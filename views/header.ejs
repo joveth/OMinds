@@ -24,7 +24,7 @@
 	<nav id="navigation">
 		<ul style="float:left;" id="headbar">
 			<li><a href="/" title="8小时内最新">最新</a></li>
-			<li><a href="#" title="24小时内评论最多">精华</a></li>
+			<li><a href="/essence" title="24小时内评论最多">精华</a></li>
 			<li><a href="/upminds" title="无需登录快速投稿">投稿</a></li>
 			<li><a href="/about">关于</a></li>
 			<li><a href="http://oideas.herokuapp.com/" target="_blank">Idea</a></li>
@@ -32,7 +32,7 @@
 		</ul>
 		<ul style="margin-left:50px;float:right;">
 			<%if(user) {%>
-			<a href="#" class="user_icon" style="clear:both;padding: 0;"><img src="<%=user.photo%>" title="<%=user.nickname%>"></a>
+			<a href="/ucenter" class="user_icon" style="clear:both;padding: 0;"><img src="<%=user.photo%>" title="<%=user.nickname%>"></a>
 			<%}else{%>
 			<li><a href="/login" >LOG</a></li>
 			<li><a href="/regist">REG</a></li>

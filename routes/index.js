@@ -2,13 +2,25 @@ var crypto = require('crypto');
 var Mind = require('../models/mind.js');
 var User = require('../models/user.js');
 var Comment = require('../models/comment.js');
+var nodemailer = require("nodemailer");
 //trim方法
 function trimStr(str){
 	if(str){
 		return str.replace(/(^\s*)|(\s*$)/g,"");
 	}
 }
-
+//生成随机串
+function randomString(size) {
+	size = size || 6;
+	var code_string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	var max_num = code_string.length + 1;
+	var new_pass = '';
+	while (size > 0) {
+		new_pass += code_string.charAt(Math.floor(Math.random() * max_num));
+		size--;
+	}
+	return new_pass;
+};
 module.exports = function(app) {
   app.get('/', function (req, res) {
 	  Mind.getAll(function(err, minds) {
@@ -89,7 +101,6 @@ module.exports = function(app) {
 		var password = md5.update(req.body.passw).digest('hex');
 		User.get(email, function(err, user) {
 			req.flash('email', email);
-			console.log(user);
 			if (!user) {
 				req.flash('error', '邮箱或密码错误!');
 				return res.redirect('/login');// 用户不存在则跳转到登录页
@@ -146,7 +157,6 @@ module.exports = function(app) {
 						flag : flag
 					});
 				
-				console.log(mind);
 				mind.save(function(err, mind) {
 					if (err) {
 						req.flash('error', err);
@@ -173,10 +183,8 @@ module.exports = function(app) {
 					req.flash('error', err);
 					return res.redirect('/');
 				}
-				console.log(temp);
 				res.writeHead(200, { 'Content-Type': 'text/plain' });
 				res.end(temp.toString());
-				//res.json({success:1});
 				return;
 			});
 		});
@@ -297,12 +305,225 @@ module.exports = function(app) {
 					});
 				});
 			}
-			
 		});
 	});
-	 app.get('/about', function (req, res) {
+	app.get('/about', function (req, res) {
 		res.render('about', {
 			title : 'OMinds - 关于',
 			user : req.session.user });
-	  });
+	});
+	app.get('/search', function (req, res) {
+		var key = req.query.searchkey;
+		if (!key) {
+			return res.redirect('/');
+		}
+		var pattern = new RegExp("^.*" + key + ".*$");
+		User.searchByKey(pattern, function(err, users) {
+			if (err) {
+				users = [];
+			}
+			Mind.searchByKey(users, pattern, function(err, minds) {
+				if (err) {
+					req.flash('error', err);
+					return res.redirect('/');
+				}
+				res.render('index', {
+					title : 'OMinds - 搜索',
+					minds : minds,
+					user : req.session.user
+				});
+			});
+		});
+	});
+	app.get('/essence', function (req, res) {
+		Mind.getEssence(function(err, minds) {
+			if (err) {
+				req.flash('error', err);
+				return res.redirect('/');
+			}
+			res.render('index', {
+				title : 'OMinds - 精华',
+				minds : minds,
+				user : req.session.user
+			});
+		});
+	});
+	app.get('/ucenter', function (req, res) {
+		var user = req.session.user;
+		if (!user) {
+			return res.redirect('/');
+		}
+		User.getById(user._id, function(err, temp) {
+			if (!temp) {
+				return res.redirect('/');
+			}
+			Mind.getUserMinds(temp,function(err, minds) {
+				if (err) {
+					minds = [];
+				}
+				res.render('uindex', {
+					title : 'OMinds - 我的投稿',
+					user : req.session.user,
+					minds : minds
+				});
+			});
+		});
+	});
+	app.get('/forget', function (req, res) {
+		var use = req.session.user;
+		if(use){
+			return res.redirect('/');
+		}
+		res.render('oforget', {
+		title : 'OMinds - 找回密码' ,
+		user : req.session.user,
+		error : req.flash('error').toString()});
+	});
+	app.post('/sendmail', function(req, res) {
+		var email = req.body.email;
+		if (!email) {
+			req.flash('error', '请填写邮箱。');
+			return res.redirect('/forget');
+		}
+		User.get(email, function(err, user) {
+			req.flash('email', email);
+			if (!user) {
+				req.flash('error', '不存在的邮箱!');
+				return res.redirect('/forget');
+			}
+			var transport = nodemailer.createTransport("SMTP", {
+				host : "smtp.163.com",
+				secureConnection : true, // use SSL
+				port : 465, // port for secure SMTP
+				auth : {
+					user : "ominds@163.com",
+					pass : "ominds5236652388"
+				}
+			});
+			var newusession = randomString(12);
+			user.password = "";
+			transport.sendMail({
+				from : "ominds@163.com",
+				to : email,
+				subject : "OMinds用户密码找回",
+				generateTextFromHTML : true,
+				html : "用户:" + user.nickname
+						+ "，请点击（复制）此链接进行密码更新:<a href=http://"
+						+ req.headers.host + "/usersetting?usession="
+						+ newusession + "  >" + req.headers.host
+						+ "/usersetting?usession=" + newusession
+						+ "</a><br>请勿回复。"
+			}, function(error, response) {
+				if (error) {
+					return res.redirect('/');
+				} else {
+					console.log("Message sent: " + response.message);
+				}
+				transport.close();
+			});
+			delete req.session.newusession;
+			delete req.session.user;
+			req.session.newusession = newusession;
+			req.session.user = user;
+			res.render('forgetsend', {
+				title : 'OMinds-邮件发送完成',
+				email : email,
+				user : null
+			});
+		});
+	});
+	app.get('/usersetting', function(req, res) {
+		if (!req.session.user) {
+			return res.redirect('/');
+		}
+		var usession = req.session.newusession;
+		if (usession) {
+			delete req.session.newusession;
+			if (usession != req.query.usession) {
+				return res.redirect('/');
+			}
+		}
+		res.render('ousersetting', {
+			title : 'OMinds - 用户设置',
+			error : req.flash('error').toString(),
+			user : req.session.user
+		});
+	});
+	app.post('/updateinfor', function(req, res) {
+		if (!req.session.user) {
+			return res.redirect('/');
+		}
+		var usession = req.session.newusession;
+		if (usession) {
+			delete req.session.newusession;
+			if (usession != req.query.usession) {
+				return res.redirect('/');
+			}
+		}
+		var email = req.body.reg_email;
+		var nickname = req.body.reg_nickname;
+		var password = req.body.reg_passw;
+		var repassword = req.body.reg_repassw;
+		if (nickname == null) {
+			req.flash('error', '请输入昵称。');
+			return res.redirect('/usersetting');
+		} else if (nickname.length < 3 || nickname.length > 40) {
+			req.flash('error', '昵称长度在3-40位。');
+			return res.redirect('/usersetting');
+		}
+		if (password == null || repassword == null) {
+			req.flash('error', '请输入密码。');
+			return res.redirect('/usersetting');
+		}
+		if (password.length < 6 || password.length > 25) {
+			req.flash('error', '密码长度在6-25位。');
+			return res.redirect('/usersetting');
+		}
+		// 检查密码是否一致
+		if (password != repassword) {
+			req.flash('error', '两次密码不一致，请确认。');
+			return res.redirect('/usersetting');
+		}
+		var md5 = crypto.createHash('md5'), 
+		password = md5.update(req.body.reg_passw).digest('hex');
+		var updateUser = new User({
+			email : email,
+			nickname : nickname,
+			password : password
+		});
+		User.update(updateUser, function(err) {
+			if (err) {
+				return res.redirect('/');
+			}
+			delete req.session.user;
+			req.session.user = updateUser;
+			error = "更新成功！";
+			res.render('ousersetting', {
+				title : 'OMinds - 用户设置',
+				error : req.flash('error').toString(),
+				user : updateUser
+			});
+		});
+	});
+	app.get('/theuserminds', function(req, res) {
+		if (!req.query.uid) {
+			return res.redirect('/');
+		}
+		var puser = null;
+		User.getById(req.query.uid, function(err, temp) {
+			if (err) {
+				return res.redirect('/');
+			}
+			Mind.getUserMinds(temp,  function(err, minds) {
+				if (err) {
+					minds = [];
+				}
+				res.render('index', {
+					title : 'OMinds - TA的投稿',
+					user : req.session.user,
+					minds : minds
+				});
+			});
+		});
+	});
 };
